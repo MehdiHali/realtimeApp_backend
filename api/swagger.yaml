@@ -1,0 +1,163 @@
+---
+swagger: "2.0"
+info:
+  description: "operations CRUD API"
+  version: "1.0.0"
+  title: "Operations CRUD API"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+# host: "localhost:8080"
+# basePath: "/api"
+# schemes:
+# - "https"
+host: "realtimeapp3.herokuapp.com"
+basePath: "/api"
+schemes:
+- "https"
+paths:
+  /operation:
+    get:
+      summary: "fetches all operations"
+      description: "fetches all the operations"
+      operationId: "getOperations"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        "200":
+          description: "operations retrieved succesfully"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Operation"
+      x-swagger-router-controller: "Default"
+    post:
+      summary: "adds an inventory item"
+      description: "adds an operation to the database"
+      operationId: "createOperation"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "operation"
+        description: "the Operation object to add"
+        required: false
+        schema:
+          $ref: "#/definitions/Operation"
+      responses:
+        "201":
+          description: "operation created"
+        "400":
+          description: "invalid input, object invalid"
+        "409":
+          description: "an existing operation already exists"
+      x-swagger-router-controller: "Default"
+  /operation/{id}:
+    get:
+      summary: "retrieve a specific operation"
+      description: "retrieve a specific operation by specifying the ID as apath param"
+      operationId: "getOperationByID"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "the id of the target operation"
+        required: true
+        type: "number"
+      responses:
+        "200":
+          description: "search operation by id"
+          schema:
+              $ref: "#/definitions/Operation"
+        "400":
+          description: "bad input parameter"
+      x-swagger-router-controller: "Default"
+    put:
+      summary: "update an operation"
+      description: "update an operation"
+      operationId: "updateOperation"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "the id of the target operation"
+        required: true
+        type: "number"
+      - in: "body"
+        name: "operation"
+        description: "new operation data"
+        required: true
+        schema:
+          $ref: "#/definitions/Operation"
+
+      responses:
+        "200":
+          description: "operation  updated successfully"
+        "400":
+          description: "invalid input, object invalid"
+        "404":
+          description: "operation not found"
+      x-swagger-router-controller: "Default"
+    delete:
+      summary: "delete an operation"
+      description: "delete an operation"
+      operationId: "deleteOperation"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "the id of the target operation"
+        required: true
+        type: "number"
+      responses:
+        "200":
+          description: "operation  deleted successfully"
+        "400":
+          description: "invalid input, object invalid"
+      x-swagger-router-controller: "Default"
+definitions:
+  Operation:
+    type: "object"
+    required:
+    - "amount"
+    - "priority"
+    properties:
+      reference:
+        type: "string"
+        format: "uuid"
+        example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+      id:
+        type: "integer"
+        format: "int64"
+        example: 298734
+      priority:
+        type: "integer"
+        format: "int32"
+        example: 893
+      amount:
+        type: "integer"
+        format: "int64"
+        example: 893
+      status:
+        type: "string"
+        enum:
+        - "queued"
+        - "processed"
+      timestamp:
+        type: "string"
+        format: "date-time"
+        example: "2016-08-29T09:12:33.001Z"
+    example:
+      reference: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+      id: 298734
+      priority: 893
+      status: "queued"
+      timestamp: "2016-08-29T09:12:33.001Z"
